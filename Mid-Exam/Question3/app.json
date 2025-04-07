@@ -1,0 +1,25 @@
+{
+  "expo": {
+    "name": "midtask3",
+    "slug": "midtask3",
+    "platforms": ["ios", "android"],
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "ios": {
+      "bundleIdentifier": "com.yourname.midtask3"
+    },
+    "android": {
+      "package": "com.yourname.midtask3"
+  
+    },
+    "extra": {
+      "redirectUri": "https://auth.expo.io/@sumaiyaShareen/midtask3"
+    }
+  }
+}
