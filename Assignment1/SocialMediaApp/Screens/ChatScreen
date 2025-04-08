@@ -1,0 +1,156 @@
+import React, { useState } from 'react';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, FlatList, Image } from 'react-native';
+import { MaterialIcons } from '@expo/vector-icons';
+
+const chatData = [
+  { id: '1', sender: 'User1', message: 'Hey! How are you?', type: 'text', timestamp: '10:30 AM', senderImage: 'https://placeimg.com/100/100/people' },
+  { id: '2', sender: 'User2', message: 'I am good, thanks! How about you?', type: 'text', timestamp: '10:31 AM', senderImage: 'https://placeimg.com/100/100/people' },
+  { id: '3', sender: 'User1', message: 'I\'m doing great!', type: 'text', timestamp: '10:32 AM', senderImage: 'https://placeimg.com/100/100/people' },
+  { id: '4', sender: 'User2', message: 'Check out this image!', type: 'image', media: 'https://placeimg.com/640/480/any', timestamp: '10:35 AM', senderImage: 'https://placeimg.com/100/100/people' },
+];
+
+const ChatScreen = () => {
+  const [message, setMessage] = useState('');
+  const [messages, setMessages] = useState(chatData);
+
+  const handleSendMessage = () => {
+    if (message.trim()) {
+      setMessages([
+        ...messages,
+        { id: String(messages.length + 1), sender: 'User1', message, type: 'text', timestamp: new Date().toLocaleTimeString(), senderImage: 'https://placeimg.com/100/100/people' },
+      ]);
+      setMessage(''); // Clear the message input
+    }
+  };
+
+  const renderItem = ({ item }) => (
+    <View style={[styles.messageContainer, item.sender === 'User1' ? styles.senderMessage : styles.receiverMessage]}>
+      <View style={styles.messageContent}>
+        {item.type === 'text' ? (
+          <Text style={[styles.messageText, item.sender === 'User1' ? styles.senderText : styles.receiverText]}>
+            {item.message}
+          </Text>
+        ) : item.type === 'image' ? (
+          <Image source={{ uri: item.media }} style={styles.messageImage} />
+        ) : null}
+        <Text style={styles.timestamp}>{item.timestamp}</Text>
+      </View>
+    </View>
+  );
+
+  return (
+    <View style={styles.container}>
+      <FlatList
+        data={messages}
+        renderItem={renderItem}
+        keyExtractor={(item) => item.id}
+        style={styles.chatList}
+        inverted
+      />
+
+      <View style={styles.inputContainer}>
+        <TouchableOpacity style={styles.attachmentIcon}>
+          <MaterialIcons name="attach-file" size={24} color="#4CAF50" />
+        </TouchableOpacity>
+
+        <TextInput
+          style={styles.input}
+          placeholder="Type a message..."
+          value={message}
+          onChangeText={setMessage}
+        />
+
+        <TouchableOpacity onPress={handleSendMessage} style={styles.sendButton}>
+          <MaterialIcons name="send" size={24} color="#fff" />
+        </TouchableOpacity>
+      </View>
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#e0f7fa', // Light blue background
+  },
+  chatList: {
+    flex: 1,
+    paddingTop: 10,
+    paddingBottom: 50,
+  },
+  messageContainer: {
+    flexDirection: 'row',
+    marginBottom: 10,
+    marginHorizontal: 10,
+  },
+  senderMessage: {
+    justifyContent: 'flex-end',
+    alignItems: 'flex-end',
+  },
+  receiverMessage: {
+    justifyContent: 'flex-start',
+    alignItems: 'flex-start',
+  },
+  messageContent: {
+    maxWidth: '75%',
+    borderRadius: 20,
+    padding: 12,
+    marginBottom: 5,
+    position: 'relative',
+  },
+  messageText: {
+    fontSize: 16,
+    lineHeight: 20,
+    // No bold or background color for a simple display
+    color: '#000', // Black text for simplicity
+  },
+  senderText: {
+    color: '#000', // Simple black text for sender
+  },
+  receiverText: {
+    color: '#000', // Simple black text for receiver
+  },
+  messageImage: {
+    width: 200,
+    height: 200,
+    borderRadius: 10,
+  },
+  timestamp: {
+    fontSize: 12,
+    color: '#888',
+    marginTop: 5,
+    position: 'absolute',
+    bottom: -18,
+    right: 0,
+  },
+  inputContainer: {
+    flexDirection: 'row',
+    padding: 12,
+    alignItems: 'center',
+    backgroundColor: '#f1f8e9', // Light background for input section
+    borderTopWidth: 1,
+    borderTopColor: '#ddd',
+  },
+  attachmentIcon: {
+    marginRight: 15,
+  },
+  input: {
+    flex: 1,
+    height: 40,
+    borderRadius: 20,
+    paddingLeft: 15,
+    paddingRight: 15,
+    borderWidth: 1,
+    borderColor: '#ddd',
+    backgroundColor: '#fff',
+    color: '#222',
+  },
+  sendButton: {
+    marginLeft: 15,
+    padding: 12,
+    backgroundColor: '#4CAF50',
+    borderRadius: 20,
+  },
+});
+
+export default ChatScreen;
